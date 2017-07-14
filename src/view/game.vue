@@ -373,6 +373,7 @@ export default {
     margin-right: 10px;
     color: #fff;
     background-size: 100% 100%;
+    z-index: 10;
 }
 
 .tag.biaojisiwang {
