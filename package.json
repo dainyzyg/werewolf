@@ -1,0 +1,32 @@
+{
+  "name": "werewolf",
+  "version": "1.0.0",
+  "description": "狼人杀法官记录工具",
+  "main": "index.html",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack --progress --watch --hide-modules",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yidao",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dainyzyg/werewolf.git"
+  },
+  "dependencies": {
+    "cross-env": "^5.0.1",
+    "fastclick": "^1.0.6",
+    "file-loader": "^0.11.2",
+    "webpack": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.5.2",
+    "css-loader": "^0.28.4",
+    "vue-loader": "^13.0.0",
+    "vue-template-compiler": "^2.3.4"
+  }
+}

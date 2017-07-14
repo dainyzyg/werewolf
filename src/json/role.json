@@ -1,0 +1,19 @@
+[{
+    "name": "狼人",
+    "pic": "langren.png"
+}, {
+    "name": "猎人",
+    "pic": "lieren.jpg"
+}, {
+    "name": "女巫",
+    "pic": "nvwu.jpg"
+}, {
+    "name": "平民",
+    "pic": "pingmin.png"
+}, {
+    "name": "预言家",
+    "pic": "yuyanjia.png"
+}, {
+    "name": "长老",
+    "pic": "zhanglao.jpg"
+}]
