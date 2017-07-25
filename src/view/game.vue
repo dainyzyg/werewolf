@@ -47,32 +47,144 @@
                         </span>
                         <span>标记警长</span>
                     </div>
-                    <div class="list-item2" @click="setState('xuanbusixun')">
-                        <span class="track" :class="{selected:getState('xuanbusixun')}">
-                            <div class="handle"></div>
-                        </span>
-                        <span>宣布死讯</span>
-                    </div>
+                    <div class="btn blue" @click="declareDead">宣布死讯</div>
+                    <div class="btn blue" @click="$router.push('/')">返回菜单</div>
                 </div>
             </div>
         </div>
-        <div class="bottom"></div>
+        <div class="bottom">
+            <div class="circle-btn prev" :class="{active:activePrev}" @click="prev">
+    
+            </div>
+            <div class="circle-btn play" :class="{active:activePlay,play:!isPlay,pause:isPlay}" @click="togglePlay">
+    
+            </div>
+            <div class="circle-btn next" :class="{active:activeNext}" @click="next">
+    
+            </div>
+            <div class="circle-btn playlist" @click="playListShow=true">
+    
+            </div>
+            <audio @error="playError" @ended="playEnded" src="audio/0.mp3" ref="audioplay">
+            </audio>
+        </div>
+        <CplayList @deleteSong='deleteSong' @playListClick='playListClick' :isPlay="isPlay" :show.sync="playListShow" :playIndex.sync="currentPlayIndex" :newPlayList='newPlayList' :totalPlayList="totalPlayList"></CplayList>
     </div>
 </template>
 <script>
 import roles from '../json/role.json'
+import playList from '../json/playList.json'
+import CplayList from '../compoments/playList.vue'
+
+let newPlayList = []
+if (localStorage.newPlayList) {
+    newPlayList = JSON.parse(localStorage.newPlayList)
+}
 export default {
+    components: {
+        CplayList
+    },
     data() {
         return {
             activeTab: 1,
             roles,
+            playList,
             players: [],
             selectedPlayer: null,
             selectedPlayerIndex: null,
-            counter: 1
+            counter: 1,
+            activePrev: false,
+            activeNext: false,
+            isPlay: false,
+            activePlay: false,
+            currentPlayIndex: 0,
+            playListShow: false,
+            newPlayList
         }
     },
     methods: {
+        playError(e) {
+            // console.log(e)
+            this.changePlayIndex('next')
+        },
+        deleteSong(i) {
+            let index = i - this.playList.length
+            this.newPlayList.splice(index, 1)
+        },
+        playListClick(i) {
+            if (this.currentPlayIndex == i) {
+                this.togglePlay()
+            } else {
+                this.currentPlayIndex = i
+            }
+        },
+        durationchange(e) {
+            console.log(e.target.duration)
+            e.target.currentTime = e.target.duration - 5
+        },
+        playEnded() {
+            console.log('playEnded')
+            this.next()
+        },
+        changePlayIndex(tag) {
+            switch (tag) {
+                case 'next':
+                    this.currentPlayIndex += 1
+                    if (this.currentPlayIndex >= this.totalPlayList.length) {
+                        this.currentPlayIndex = 0
+                    }
+                    break
+                case 'prev':
+                    this.currentPlayIndex -= 1
+                    if (this.currentPlayIndex < 0) {
+                        this.currentPlayIndex = this.totalPlayList.length - 1
+                    }
+                    break
+            }
+        },
+        togglePlay() {
+            if (this.isPlay) {
+                this.$refs.audioplay.pause()
+            } else {
+                this.$refs.audioplay.play()
+            }
+            this.isPlay = !this.isPlay
+            this.activePlay = true
+            setTimeout(() => {
+                this.activePlay = false
+            }, 200)
+        },
+        play() {
+            this.isPlay = true
+            let currentPlay = this.totalPlayList[this.currentPlayIndex]
+            this.$refs.audioplay.src = currentPlay.src
+            let playPromise = this.$refs.audioplay.play()
+            if (playPromise !== undefined) {
+                playPromise.then(function () {
+                    // Automatic playback started!
+                }).catch(function (error) {
+                    // Automatic playback failed.
+                    // Show a UI element to let the user manually start playback.
+                })
+            }
+
+        },
+        prev() {
+            this.activePrev = true
+            setTimeout(() => {
+                this.activePrev = false
+            }, 200)
+            this.changePlayIndex('prev')
+            // this.play()
+        },
+        next() {
+            this.activeNext = true
+            setTimeout(() => {
+                this.activeNext = false
+            }, 200)
+            this.changePlayIndex('next')
+            // this.play()
+        },
         addPlayer() {
             this.players.push({
                 id: this.counter++,
@@ -80,8 +192,7 @@ export default {
                 roleName: '平民',
                 pic: 'pingmin.png',
                 biaojisiwang: false,
-                biaojijingzhang: false,
-                xuanbusixun: false
+                biaojijingzhang: false
             })
             this.$nextTick(() => this.$refs.playerContent.scrollTop = 100000)
         },
@@ -127,15 +238,38 @@ export default {
             } else {
                 return 'none'
             }
+        },
+        declareDead() {
+            let deadNumbers = []
+            this.players.forEach((player, index) => {
+                if (player.biaojisiwang) {
+                    deadNumbers.push(index + 1)
+                }
+            })
+            let content = deadNumbers.length ? `${deadNumbers.join(',')}号死亡` : '无人死亡'
+            this.$alert.show({
+                title: '死亡结果',
+                content
+            })
         }
     },
     computed: {
-
+        totalPlayList() {
+            console.log('totalPlayList')
+            return this.playList.concat(this.newPlayList)
+        }
     },
     watch: {
         selectedPlayer(newVal, oldVal) {
             newVal && (newVal.selected = true)
             oldVal && (oldVal.selected = false)
+        },
+        currentPlayIndex(i) {
+            this.play()
+        },
+        newPlayList(val) {
+            console.log('newPlayList')
+            localStorage.newPlayList = JSON.stringify(val)
         }
     }
 }
@@ -154,12 +288,16 @@ export default {
 .bottom {
     /*background-color: #11c1f3;*/
     flex: 0 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .left {
     display: flex;
     flex-direction: column;
     flex: 1;
+    border-bottom: 1px solid #ddd;
 }
 
 .right {
@@ -249,6 +387,51 @@ export default {
     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
     background-color: #11c1f3;
     color: #fff;
+}
+
+.circle-btn {
+    position: relative;
+    margin: 0 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+    /* background-color: #11c1f3; */
+    color: #fff;
+    background-size: cover;
+    transition: all .2s ease-in-out;
+}
+
+.circle-btn.active {
+    transform: scale(1.2);
+}
+
+
+.circle-btn.prev {
+    background-image: url(../../assets/prev.png);
+}
+
+.circle-btn.play {
+    background-image: url(../../assets/play.png);
+}
+
+.circle-btn.pause {
+    background-image: url(../../assets/pause.png);
+}
+
+.circle-btn.next {
+    background-image: url(../../assets/next.png);
+}
+
+.circle-btn.playlist {
+    background-image: url(../../assets/playlist.png);
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .add {
@@ -386,5 +569,27 @@ export default {
 
 .tag.xuanbusixun {
     background-image: url(../../assets/tag-yellow.png);
+}
+
+.btn {
+    border-color: transparent;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+    border-radius: 8px;
+    vertical-align: top;
+    text-align: center;
+    text-overflow: ellipsis;
+    line-height: 48px;
+    cursor: pointer;
+    min-width: 52px;
+    width: 180px;
+    font-size: 20px;
+    color: #fff;
+    margin-left: 10px;
+}
+
+.blue {
+    background-color: #11c1f3;
 }
 </style>

@@ -1,3 +1,4 @@
+import install from './install.js'
 import app from './view/app.vue'
 import menu from './view/menu.vue'
 import game from './view/game.vue'
@@ -6,7 +7,18 @@ import role from './view/role.vue'
 import about from './view/about.vue'
 import FastClick from 'fastclick'
 
-FastClick.attach(document.body)
+Vue.use(install)
+
+// window.addEventListener('load', function () {
+//     FastClick.attach(document.body);
+// }, false)
+
+// function preventDefault(e) {
+//     e.preventDefault()
+// }
+// document.body.addEventListener('touchstart', preventDefault)
+// document.body.addEventListener('touchend', preventDefault)
+
 
 // 一些兼容性代码
 /* for iOS 10, users can now pinch-to-zoom even when a website sets user-scalable=no in the viewport. */
@@ -15,7 +27,6 @@ document.documentElement.addEventListener('touchstart', (e) => {
         e.preventDefault()
     }
 }, false)
-
 /* iOS Safari - Disable double click to zoom */
 let lastTouchEnd = 0;
 document.documentElement.addEventListener('touchend', (e) => {
@@ -26,6 +37,7 @@ document.documentElement.addEventListener('touchend', (e) => {
     lastTouchEnd = now
 }, false)
 
+FastClick.attach(document.body)
 
 const routes = [{
         path: '/game',
