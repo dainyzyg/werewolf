@@ -15,6 +15,7 @@
     "url": "git://github.com/dainyzyg/werewolf.git"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "cross-env": "^5.0.1",
     "fastclick": "^1.0.6",
     "file-loader": "^0.11.2",

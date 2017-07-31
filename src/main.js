@@ -5,6 +5,7 @@ import game from './view/game.vue'
 import intro from './view/intro.vue'
 import role from './view/role.vue'
 import about from './view/about.vue'
+import roleManagement from './view/roleManagement.vue'
 import FastClick from 'fastclick'
 
 Vue.use(install)
@@ -48,6 +49,9 @@ const routes = [{
     }, {
         path: '/role',
         component: role
+    }, {
+        path: '/roleManagement',
+        component: roleManagement
     }, {
         path: '/about',
         component: about

@@ -102,6 +102,11 @@ export default {
             newPlayList
         }
     },
+    created() {
+        if (localStorage.roleList && plus) {
+            this.roles = JSON.parse(localStorage.roleList)
+        }
+    },
     methods: {
         playError(e) {
             // console.log(e)
@@ -119,11 +124,11 @@ export default {
             }
         },
         durationchange(e) {
-            console.log(e.target.duration)
+            // console.log(e.target.duration)
             e.target.currentTime = e.target.duration - 5
         },
         playEnded() {
-            console.log('playEnded')
+            // console.log('playEnded')
             this.next()
         },
         changePlayIndex(tag) {
@@ -189,8 +194,8 @@ export default {
             this.players.push({
                 id: this.counter++,
                 selected: false,
-                roleName: '平民',
-                pic: 'pingmin.png',
+                roleName: '',
+                pic: '',
                 biaojisiwang: false,
                 biaojijingzhang: false
             })
@@ -234,7 +239,8 @@ export default {
         },
         setBGImage(player) {
             if (player.pic) {
-                return `url(assets/${player.pic})`
+                // console.log(player.pic)
+                return `url(${player.pic})`
             } else {
                 return 'none'
             }
@@ -255,7 +261,6 @@ export default {
     },
     computed: {
         totalPlayList() {
-            console.log('totalPlayList')
             return this.playList.concat(this.newPlayList)
         }
     },
@@ -268,7 +273,7 @@ export default {
             this.play()
         },
         newPlayList(val) {
-            console.log('newPlayList')
+            // console.log('newPlayList')
             localStorage.newPlayList = JSON.stringify(val)
         }
     }

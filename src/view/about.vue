@@ -1,42 +1,75 @@
 <template lang="pug">
-.page
-    .bg(@click.self='showBackDrop')
+.page.flex-column
+    pre.console {{text}}
+    .btn.blue(@click="$router.push('/')") 返回
 </template>
 <script>
-import BackDrop from '../compoments/backDrop.vue'
 export default {
-    components: {
-        BackDrop
-    },
     data() {
         return {
-            i: 0
+            text: ''
         }
     },
-    methods: {
-        showBackDrop() {
-            this.$alert.show({
-                title: this.i++,
-                content: this.i++
-            })
-        },
-        hide() {
-
+    created() {
+        if (localStorage.about) {
+            this.text = localStorage.about
         }
     }
 }
 </script>
-<style lang="stylus">
-.bg
-    display flex
-    position absolute
-    top 0
-    bottom 0
-    left 0
-    right 0
-    justify-content center
-    align-items center
+
+<style lang="stylus" scoped>
+.console
+    flex 1
+    background #FFFFFF
+    align-self stretch
+    padding 40px
+    margin 0
+    overflow-x hidden
+    overflow-y auto
+    word-wrap break-word
+    white-space pre-wrap
+.page {
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.btn {
+    flex: 0 0 60px
+    border-color: transparent;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+    border-radius: 8px;
+    vertical-align: top;
+    text-align: center;
+    text-overflow: ellipsis;
+    line-height: 60px;
+    cursor: pointer;
+    padding: 0 12px;
+    min-width: 52px;
+    width: 350px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.blue {
+    background-color: #4a90e2;
+}
+
+.blue2 {
+    background-color: #11c1f3;
+}
+
+.red {
+    background-color: #ea5a49;
+}
+
+.green {
+    background-color: #4c0;
+}
+
+.yellow {
+    background-color: #ffbd17;
+}
 </style>
-
-
-

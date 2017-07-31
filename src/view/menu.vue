@@ -4,6 +4,7 @@
         <div class="btn blue" @click="$router.push('intro')">身份介绍</div>
         <div class="btn yellow" @click="$router.push('role')">常见规则</div>
         <div class="btn green" @click="$router.push('about')">关于我们</div>
+        <div class="btn blue2" @click="$router.push('roleManagement')">数据更新</div>
     </div>
 </template>
 <style scoped>

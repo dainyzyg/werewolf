@@ -1,19 +1,19 @@
 [{
     "name": "狼人",
-    "pic": "langren.png"
+    "pic": "assets/langren.png"
 }, {
     "name": "猎人",
-    "pic": "lieren.jpg"
+    "pic": "assets/lieren.jpg"
 }, {
     "name": "女巫",
-    "pic": "nvwu.jpg"
+    "pic": "assets/nvwu.jpg"
 }, {
     "name": "平民",
-    "pic": "pingmin.png"
+    "pic": "assets/pingmin.png"
 }, {
     "name": "预言家",
-    "pic": "yuyanjia.png"
+    "pic": "assets/yuyanjia.png"
 }, {
     "name": "长老",
-    "pic": "zhanglao.jpg"
+    "pic": "assets/zhanglao.jpg"
 }]
