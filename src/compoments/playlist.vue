@@ -86,7 +86,7 @@ export default {
         },
         addmusicSave() {
             if (this.addmusicName && this.addmusicUrl) {
-                this.newPlayList.push({
+                this.newPlayList.unshift({
                     name: this.addmusicName,
                     src: this.addmusicUrl,
                     isNew: true

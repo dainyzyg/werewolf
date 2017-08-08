@@ -3,13 +3,14 @@
         <div class="top">
             <div class="left">
                 <div class="player-content" ref="playerContent">
-                    <div v-for="player,i in players" :style="{backgroundImage:setBGImage(player)}" :class="{ selected: player.selected }" class="player" @click="selectplayer(player,i)">
+                    <div v-for="player,i in players" :style="{backgroundImage:setBGImage(player)}" :class="{ selected: player.selected,dead:player.biaojisiwang }" class="player" @click="selectplayer(player,i)">
                         <div class="number">{{i+1}}</div>
                         <div class="tag-group">
-                            <div v-if="player.biaojisiwang" class="tag biaojisiwang">死亡</div>
+                            <div v-if="player.biaojisiwang" class="biaojisiwang"></div>
                             <div v-if="player.biaojijingzhang" class="tag biaojijingzhang">警长</div>
                             <div v-if="player.xuanbusixun" class="tag xuanbusixun">死讯</div>
                         </div>
+                        <div class="roleName">{{player.roleName}}</div>
                     </div>
                     <div class="placeholder"></div>
                     <div class="placeholder"></div>
@@ -53,19 +54,22 @@
             </div>
         </div>
         <div class="bottom">
-            <div class="circle-btn prev" :class="{active:activePrev}" @click="prev">
+            <div class="musicName">{{musicName}}</div>
+            <div class="buttons">
+                <div class="circle-btn prev" :class="{active:activePrev}" @click="prev">
     
-            </div>
-            <div class="circle-btn play" :class="{active:activePlay,play:!isPlay,pause:isPlay}" @click="togglePlay">
+                </div>
+                <div class="circle-btn play" :class="{active:activePlay,play:!isPlay,pause:isPlay}" @click="togglePlay">
     
-            </div>
-            <div class="circle-btn next" :class="{active:activeNext}" @click="next">
+                </div>
+                <div class="circle-btn next" :class="{active:activeNext}" @click="next">
     
-            </div>
-            <div class="circle-btn playlist" @click="playListShow=true">
+                </div>
+                <div class="circle-btn playlist" @click="playListShow=true">
     
+                </div>
             </div>
-            <audio @error="playError" @ended="playEnded" src="audio/0.mp3" ref="audioplay">
+            <audio @error="playError" @ended="playEnded" ref="audioplay">
             </audio>
         </div>
         <CplayList @deleteSong='deleteSong' @playListClick='playListClick' :isPlay="isPlay" :show.sync="playListShow" :playIndex.sync="currentPlayIndex" :newPlayList='newPlayList' :totalPlayList="totalPlayList"></CplayList>
@@ -148,6 +152,10 @@ export default {
             }
         },
         togglePlay() {
+            if (!this.$refs.audioplay.src) {
+                let currentPlay = this.totalPlayList[this.currentPlayIndex]
+                this.$refs.audioplay.src = currentPlay.src
+            }
             if (this.isPlay) {
                 this.$refs.audioplay.pause()
             } else {
@@ -261,7 +269,12 @@ export default {
     },
     computed: {
         totalPlayList() {
-            return this.playList.concat(this.newPlayList)
+            return this.newPlayList.concat(this.playList)
+            // return this.playList.concat(this.newPlayList)
+        },
+        musicName() {
+            let currentPlay = this.totalPlayList[this.currentPlayIndex]
+            return currentPlay.name
         }
     },
     watch: {
@@ -292,7 +305,22 @@ export default {
 
 .bottom {
     /*background-color: #11c1f3;*/
-    flex: 0 0 100px;
+    flex: 0 0 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+.musicName {
+    flex: 1;
+    color: #11c1f3;
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.buttons {
+    flex: 0 0 90px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -472,6 +500,10 @@ export default {
     /*border: 2px solid #B5B5B5;*/
 }
 
+.player.dead {
+    filter: grayscale(100%);
+}
+
 .number {
     position: absolute;
     bottom: 0px;
@@ -483,6 +515,15 @@ export default {
     background-color: #4A90E2;
     text-align: center;
     line-height: 30px;
+}
+
+.roleName {
+    position: absolute;
+    top: 125px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #4A90E2;
 }
 
 .player.selected {
@@ -551,21 +592,31 @@ export default {
 }
 
 .tag {
-    padding-left: 6px;
     padding-top: 5px;
     writing-mode: vertical-lr;
     -webkit-writing-mode: vertical-lr;
-    font-size: 14px;
-    width: 25px;
-    height: 63px;
+    font-size: 16px;
+    line-height: 35px;
+    text-indent: 10px;
+    letter-spacing: 10px;
+    width: 35px;
+    height: 90px;
     margin-right: 10px;
     color: #fff;
     background-size: 100% 100%;
     z-index: 10;
 }
 
-.tag.biaojisiwang {
-    background-image: url(../../assets/tag-red.png);
+.biaojisiwang {
+    position: absolute;
+    top: -11px;
+    transform: rotate(45deg);
+    border-left: 5px solid cadetblue;
+    border-right: 5px solid cadetblue;
+    left: 52px;
+    width: 15px;
+    height: 150px;
+    z-index: 11;
 }
 
 .tag.biaojijingzhang {
