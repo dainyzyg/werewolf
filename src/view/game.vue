@@ -57,16 +57,16 @@
             <div class="musicName">{{musicName}}</div>
             <div class="buttons">
                 <div class="circle-btn prev" :class="{active:activePrev}" @click="prev">
-    
+
                 </div>
                 <div class="circle-btn play" :class="{active:activePlay,play:!isPlay,pause:isPlay}" @click="togglePlay">
-    
+
                 </div>
                 <div class="circle-btn next" :class="{active:activeNext}" @click="next">
-    
+
                 </div>
                 <div class="circle-btn playlist" @click="playListShow=true">
-    
+
                 </div>
             </div>
             <audio @error="playError" @ended="playEnded" ref="audioplay">
@@ -173,9 +173,9 @@ export default {
             this.$refs.audioplay.src = currentPlay.src
             let playPromise = this.$refs.audioplay.play()
             if (playPromise !== undefined) {
-                playPromise.then(function () {
+                playPromise.then(function() {
                     // Automatic playback started!
-                }).catch(function (error) {
+                }).catch(function(error) {
                     // Automatic playback failed.
                     // Show a UI element to let the user manually start playback.
                 })
@@ -367,6 +367,8 @@ export default {
     /* border-top: 1px solid #ddd; */
     margin-top: 10px;
     flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .list-item {
